@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#6c63ff" />
+  <meta name="description" content="MakerCost — 3D Print Price Calculator for makers and sellers" />
+  <title>MakerCost — 3D Print Price Calculator</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#6c63ff"/>
+        <polygon points="16,4 28,10 28,22 16,28 4,22 4,10" fill="none" stroke="white" stroke-width="2"/>
+        <polygon points="16,4 28,10 16,16 4,10" fill="white" opacity="0.3"/>
+        <line x1="16" y1="16" x2="16" y2="28" stroke="white" stroke-width="2"/>
+        <line x1="28" y1="10" x2="16" y2="16" stroke="white" stroke-width="2"/>
+        <line x1="4" y1="10" x2="16" y2="16" stroke="white" stroke-width="2"/>
+      </svg>
+      <span>MakerCost</span>
+    </div>
+    <button id="themeToggle" title="Toggle dark mode">🌙</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>3D Print Price Calculator</h1>
+      <p>Know your real cost. Price your prints confidently.</p>
+    </section>
+
+    <div class="card-grid">
+
+      <!-- FILAMENT -->
+      <div class="card">
+        <h2><span class="icon">🧵</span> Filament</h2>
+        <div class="field">
+          <label>Filament type</label>
+          <select id="filamentType">
+            <option value="">-- Select --</option>
+            <option value="PLA">PLA</option>
+            <option value="PETG">PETG</option>
+            <option value="ABS">ABS</option>
+            <option value="TPU">TPU</option>
+            <option value="ASA">ASA</option>
+            <option value="Resin">Resin</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Cost per kg (₹)</label>
+          <input type="number" id="filamentCostPerKg" placeholder="e.g. 1200" min="0" />
+        </div>
+        <div class="field">
+          <label>Weight used (grams)</label>
+          <input type="number" id="filamentUsedG" placeholder="e.g. 45" min="0" />
+        </div>
+        <div class="field">
+          <label>Waste / support material (%)</label>
+          <input type="number" id="wastePercent" placeholder="e.g. 10" min="0" max="100" value="10" />
+        </div>
+      </div>
+
+      <!-- ELECTRICITY -->
+      <div class="card">
+        <h2><span class="icon">⚡</span> Electricity</h2>
+        <div class="field">
+          <label>Your state</label>
+          <select id="stateSelect">
+            <option value="custom">-- Enter manually --</option>
+            <option value="4.5">Andhra Pradesh (~₹4.5/kWh)</option>
+            <option value="6.0">Delhi (~₹6.0/kWh)</option>
+            <option value="7.5">Gujarat (~₹7.5/kWh)</option>
+            <option value="7.0">Karnataka (~₹7.0/kWh)</option>
+            <option value="6.5">Kerala (~₹6.5/kWh)</option>
+            <option value="8.0">Maharashtra (~₹8.0/kWh)</option>
+            <option value="5.5">Rajasthan (~₹5.5/kWh)</option>
+            <option value="6.0">Tamil Nadu (~₹6.0/kWh)</option>
+            <option value="6.0">Telangana (~₹6.0/kWh)</option>
+            <option value="5.0">Uttar Pradesh (~₹5.0/kWh)</option>
+            <option value="5.5">West Bengal (~₹5.5/kWh)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Electricity rate (₹ per kWh)</label>
+          <input type="number" id="electricityRate" placeholder="e.g. 6.5" step="0.1" min="0" />
+        </div>
+        <div class="field">
+          <label>Printer</label>
+          <select id="printerSelect">
+            <option value="custom">-- Enter manually --</option>
+            <option value="250">Bambu A1 (~250W)</option>
+            <option value="350">Bambu X1C (~350W)</option>
+            <option value="300">Snapmaker U1 (~300W)</option>
+            <option value="200">Ender 3 (~200W)</option>
+            <option value="150">Creality Ender S1 (~150W)</option>
+            <option value="120">Prusa Mini (~120W)</option>
+            <option value="250">Prusa MK4 (~250W)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Printer wattage (W)</label>
+          <input type="number" id="printerWattage" placeholder="e.g. 250" min="0" />
+        </div>
+        <div class="field">
+          <label>Print time (hours)</label>
+          <input type="number" id="printTimeHours" placeholder="e.g. 3.5" step="0.5" min="0" />
+        </div>
+      </div>
+
+      <!-- MACHINE & OVERHEAD -->
+      <div class="card">
+        <h2><span class="icon">🖨️</span> Machine & Overhead</h2>
+        <div class="field">
+          <label>Printer purchase price (₹)</label>
+          <input type="number" id="printerPrice" placeholder="e.g. 35000" min="0" />
+        </div>
+        <div class="field">
+          <label>Expected printer lifespan (hours)</label>
+          <input type="number" id="printerLifespan" placeholder="e.g. 5000" min="0" value="5000" />
+        </div>
+        <div class="field">
+          <label>Failure rate (%)</label>
+          <input type="number" id="failureRate" placeholder="e.g. 5" min="0" max="100" value="5" />
+        </div>
+        <div class="field">
+          <label>Post-processing time (hours)</label>
+          <input type="number" id="postProcessHours" placeholder="e.g. 0.5" step="0.25" min="0" value="0" />
+        </div>
+        <div class="field">
+          <label>Your hourly rate (₹)</label>
+          <input type="number" id="hourlyRate" placeholder="e.g. 200" min="0" value="0" />
+        </div>
+      </div>
+
+      <!-- SELLING -->
+      <div class="card">
+        <h2><span class="icon">💰</span> Selling</h2>
+        <div class="field">
+          <label>Profit margin (%)</label>
+          <input type="number" id="profitMargin" placeholder="e.g. 30" min="0" value="30" />
+        </div>
+        <div class="field">
+          <label>Platform</label>
+          <select id="platformSelect">
+            <option value="0">Direct / No platform</option>
+            <option value="6.5">Etsy (~6.5%)</option>
+            <option value="5">Instagram / WhatsApp (0-5%)</option>
+            <option value="2">Razorpay (~2%)</option>
+            <option value="3">PayPal (~3%)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Platform fee (%)</label>
+          <input type="number" id="platformFee" placeholder="e.g. 6.5" step="0.1" min="0" value="0" />
+        </div>
+        <div class="field">
+          <label>Packaging cost (₹)</label>
+          <input type="number" id="packagingCost" placeholder="e.g. 30" min="0" value="0" />
+        </div>
+        <div class="field">
+          <label>Shipping cost (₹)</label>
+          <input type="number" id="shippingCost" placeholder="e.g. 80" min="0" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="calculateBtn" class="btn-primary">Calculate Price</button>
+      <button id="resetBtn" class="btn-secondary">Reset</button>
+      <button id="savePresetBtn" class="btn-secondary">Save Preset</button>
+      <button id="loadPresetBtn" class="btn-secondary">Load Preset</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results" id="results" style="display:none;">
+      <h2>Price Breakdown</h2>
+      <div class="breakdown">
+        <div class="breakdown-row"><span>Filament cost</span><span id="r-filament">₹0</span></div>
+        <div class="breakdown-row"><span>Electricity cost</span><span id="r-electricity">₹0</span></div>
+        <div class="breakdown-row"><span>Machine wear</span><span id="r-machine">₹0</span></div>
+        <div class="breakdown-row"><span>Labor cost</span><span id="r-labor">₹0</span></div>
+        <div class="breakdown-row"><span>Failure buffer</span><span id="r-failure">₹0</span></div>
+        <div class="breakdown-row"><span>Packaging + Shipping</span><span id="r-logistics">₹0</span></div>
+        <div class="breakdown-row total"><span>Total Cost</span><span id="r-totalCost">₹0</span></div>
+        <div class="breakdown-row"><span>Profit margin</span><span id="r-profit">₹0</span></div>
+        <div class="breakdown-row"><span>Platform fee</span><span id="r-platform">₹0</span></div>
+        <div class="breakdown-row highlight"><span>Minimum Selling Price</span><span id="r-minPrice">₹0</span></div>
+        <div class="breakdown-row highlight2"><span>Recommended Selling Price</span><span id="r-recPrice">₹0</span></div>
+      </div>
+
+      <div class="insights">
+        <div class="insight-card">
+          <div class="insight-label">Effective Hourly Wage</div>
+          <div class="insight-value" id="r-hourlyWage">₹0/hr</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Cost per gram</div>
+          <div class="insight-value" id="r-perGram">₹0/g</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Profit per unit</div>
+          <div class="insight-value" id="r-profitUnit">₹0</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="copyBtn" class="btn-secondary">📋 Copy Summary</button>
+        <button id="shareBtn" class="btn-secondary">🔗 Share</button>
+      </div>
+    </div>
+
+    <!-- PRESETS MODAL -->
+    <div class="modal" id="presetsModal" style="display:none;">
+      <div class="modal-box">
+        <h3>Saved Presets</h3>
+        <div id="presetsList"></div>
+        <button class="btn-secondary" id="closeModal">Close</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>MakerCost &mdash; Built for makers, by a maker &mdash; <a href="https://github.com/kumarprem886" target="_blank">GitHub</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
