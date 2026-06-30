@@ -175,6 +175,21 @@
       <button id="loadPresetBtn" class="btn-secondary">Load Preset</button>
     </div>
 
+    <!-- BULK + PRINT NAME -->
+    <div class="card" id="extraInputs" style="margin-bottom:20px;">
+      <h2><span class="icon">📦</span> Print Details</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="field">
+          <label>Print name / item</label>
+          <input type="text" id="printName" placeholder="e.g. Flexi Dragon" />
+        </div>
+        <div class="field">
+          <label>Quantity (bulk)</label>
+          <input type="number" id="bulkQty" placeholder="e.g. 1" min="1" value="1" />
+        </div>
+      </div>
+    </div>
+
     <!-- RESULTS -->
     <div class="results" id="results" style="display:none;">
       <h2>Price Breakdown</h2>
@@ -189,7 +204,9 @@
         <div class="breakdown-row"><span>Profit margin</span><span id="r-profit">₹0</span></div>
         <div class="breakdown-row"><span>Platform fee</span><span id="r-platform">₹0</span></div>
         <div class="breakdown-row highlight"><span>Minimum Selling Price</span><span id="r-minPrice">₹0</span></div>
-        <div class="breakdown-row highlight2"><span>Recommended Selling Price</span><span id="r-recPrice">₹0</span></div>
+        <div class="breakdown-row highlight"><span>Minimum Selling Price (per unit)</span><span id="r-minPrice">₹0</span></div>
+        <div class="breakdown-row highlight2"><span>Recommended Selling Price (per unit)</span><span id="r-recPrice">₹0</span></div>
+        <div class="breakdown-row highlight2" id="bulkRow" style="display:none;"><span>Total for <span id="bulkQtyLabel">1</span> units</span><span id="r-bulkTotal">₹0</span></div>
       </div>
 
       <div class="insights">
@@ -208,8 +225,43 @@
       </div>
 
       <div class="actions">
-        <button id="copyBtn" class="btn-secondary">📋 Copy Summary</button>
+        <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+        <button id="whatsappBtn" class="btn-whatsapp">💬 WhatsApp</button>
+        <button id="pdfBtn" class="btn-secondary">📄 PDF</button>
+        <button id="instaBtn" class="btn-secondary">📸 Insta Card</button>
         <button id="shareBtn" class="btn-secondary">🔗 Share</button>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="card" id="historySection" style="display:none;margin-top:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 style="margin:0;"><span class="icon">🕓</span> Print History</h2>
+        <button id="clearHistoryBtn" class="btn-secondary" style="padding:6px 12px;font-size:0.8rem;">Clear All</button>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+    <!-- INSTAGRAM CARD MODAL -->
+    <div class="modal" id="instaModal" style="display:none;">
+      <div class="modal-box" style="max-width:520px;">
+        <h3>Instagram Price Card</h3>
+        <div id="instaCard" class="insta-card">
+          <div class="insta-brand">MakerCost</div>
+          <div class="insta-title" id="ic-title">Print Name</div>
+          <div class="insta-divider"></div>
+          <div class="insta-row"><span>Material</span><span id="ic-material">—</span></div>
+          <div class="insta-row"><span>Print Time</span><span id="ic-time">—</span></div>
+          <div class="insta-row"><span>Your Cost</span><span id="ic-cost">₹0</span></div>
+          <div class="insta-divider"></div>
+          <div class="insta-price-label">Selling Price</div>
+          <div class="insta-price" id="ic-price">₹0</div>
+          <div class="insta-footer">Printed in India 🇮🇳 | @kumarprem886</div>
+        </div>
+        <div class="actions" style="margin-top:16px;">
+          <button id="downloadInstaBtn" class="btn-primary">⬇️ Download Image</button>
+          <button id="closeInstaModal" class="btn-secondary">Close</button>
+        </div>
       </div>
     </div>
 
@@ -228,6 +280,10 @@
     <p>MakerCost &mdash; Built for makers, by a maker &mdash; <a href="https://github.com/kumarprem886" target="_blank">GitHub</a></p>
   </footer>
 
+  <!-- PDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- html2canvas for Instagram card -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -327,6 +327,99 @@ footer {
 }
 footer a { color: var(--primary); text-decoration: none; }
 
+/* WHATSAPP BUTTON */
+.btn-whatsapp {
+  background: #25d366;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-whatsapp:hover { background: #1ebe5d; }
+
+/* HISTORY */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.history-item:last-child { border-bottom: none; }
+.history-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.history-price { font-weight: 700; color: var(--success); white-space: nowrap; }
+.history-actions { display: flex; gap: 6px; }
+.history-actions button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.history-actions button:hover { border-color: var(--primary); color: var(--primary); }
+
+/* INSTAGRAM CARD */
+.insta-card {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 16px;
+  padding: 32px;
+  color: white;
+  text-align: center;
+  margin: 8px 0;
+}
+.insta-brand {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #a78bfa;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.insta-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: white;
+}
+.insta-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 16px 0;
+}
+.insta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  color: rgba(255,255,255,0.8);
+}
+.insta-row span:last-child { font-weight: 600; color: white; }
+.insta-price-label {
+  font-size: 0.75rem;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 16px;
+}
+.insta-price {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #6ee7b7;
+  line-height: 1.1;
+}
+.insta-footer {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 20px;
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.5rem; }
