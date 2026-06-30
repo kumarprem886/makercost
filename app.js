@@ -287,6 +287,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   const r = window._lastResult;
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const cfg = getSettings();
 
   const purple = [108, 99, 255];
   const dark   = [26, 26, 46];
@@ -294,17 +295,25 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   const green  = [16, 185, 129];
 
   // Header bar
+  const bizName   = cfg.bizName   || 'MakerCost';
+  const ownerName = cfg.ownerName || '';
+  const city      = cfg.city      || '';
+  const phone     = cfg.phone     || '';
+  const email     = cfg.email     || '';
+  const insta     = cfg.instagram ? `@${cfg.instagram.replace('@','')}` : '';
+  const line2 = [ownerName, city].filter(Boolean).join('  |  ');
+  const line3 = [phone, email, insta].filter(Boolean).join('  |  ');
+
   doc.setFillColor(...purple);
   doc.rect(0, 0, 210, 40, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text('ShroomLab 3D', 14, 13);
+  doc.text(bizName, 14, 13);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('Prem Kumar  |  Cuddalore', 14, 21);
-  doc.text('📞 9597976015  |  shroomlabddd@gmail.com  |  @shroomlab_3d', 14, 28);
-  doc.setFontSize(8);
+  if (line2) doc.text(line2, 14, 21);
+  if (line3) doc.text(line3, 14, 28);
   doc.setTextColor(200, 200, 255);
   doc.text('3D Print Price Quote', 14, 35);
   doc.setTextColor(255, 255, 255);
@@ -385,7 +394,8 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   doc.setTextColor(...muted);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('ShroomLab 3D | Cuddalore | 9597976015 | shroomlabddd@gmail.com', 105, 285, { align: 'center' });
+  const footerParts = [bizName, city, phone, email].filter(Boolean);
+  doc.text(footerParts.join(' | '), 105, 285, { align: 'center' });
 
   doc.save(`MakerCost_${r.printName.replace(/\s+/g, '_')}.pdf`);
 });
@@ -394,11 +404,15 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
 document.getElementById('instaBtn').addEventListener('click', () => {
   if (!window._lastResult) { alert('Calculate first!'); return; }
   const r = window._lastResult;
+  const s = getSettings();
   document.getElementById('ic-title').textContent    = r.printName;
   document.getElementById('ic-material').textContent = r.filamentType;
   document.getElementById('ic-time').textContent     = `${r.printTimeHours}h`;
   document.getElementById('ic-cost').textContent     = fmt(r.totalCost);
   document.getElementById('ic-price').textContent    = fmt(r.recPrice);
+  const handle = s.instagram ? `@${s.instagram.replace('@','')}` : '@shroomlab_3d';
+  const city   = s.city ? `${s.city} 🇮🇳` : 'Printed in India 🇮🇳';
+  document.getElementById('ic-footer').textContent   = `${city} | ${handle}`;
   document.getElementById('instaModal').style.display = 'flex';
 });
 
@@ -424,6 +438,84 @@ document.getElementById('shareBtn').addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
   }
 });
+
+// ─── SETTINGS ────────────────────────────────────────────────
+function getSettings() {
+  return JSON.parse(localStorage.getItem('mc-settings') || '{}');
+}
+function saveSettings(s) {
+  localStorage.setItem('mc-settings', JSON.stringify(s));
+}
+
+function applySettingsToUI() {
+  const s = getSettings();
+  if (s.bizName)    document.getElementById('s-bizName').value    = s.bizName;
+  if (s.ownerName)  document.getElementById('s-ownerName').value  = s.ownerName;
+  if (s.phone)      document.getElementById('s-phone').value      = s.phone;
+  if (s.city)       document.getElementById('s-city').value       = s.city;
+  if (s.email)      document.getElementById('s-email').value      = s.email;
+  if (s.instagram)  document.getElementById('s-instagram').value  = s.instagram;
+  if (s.logoDataUrl) {
+    document.getElementById('s-logoImg').src = s.logoDataUrl;
+    document.getElementById('s-logoPreview').style.display = 'block';
+  }
+  // Update Instagram card footer
+  const handle = s.instagram ? `@${s.instagram.replace('@','')}` : '@shroomlab_3d';
+  document.getElementById('ic-footer').textContent = `Printed in India 🇮🇳 | ${handle}`;
+}
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  applySettingsToUI();
+  document.getElementById('settingsModal').style.display = 'flex';
+});
+
+document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+  document.getElementById('settingsModal').style.display = 'none';
+});
+
+// Logo file preview
+document.getElementById('s-logo').addEventListener('change', function () {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('s-logoImg').src = e.target.result;
+    document.getElementById('s-logoPreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+  const existing = getSettings();
+  const logoFile = document.getElementById('s-logo').files[0];
+
+  function persist(logoDataUrl) {
+    const s = {
+      bizName:    document.getElementById('s-bizName').value.trim(),
+      ownerName:  document.getElementById('s-ownerName').value.trim(),
+      phone:      document.getElementById('s-phone').value.trim(),
+      city:       document.getElementById('s-city').value.trim(),
+      email:      document.getElementById('s-email').value.trim(),
+      instagram:  document.getElementById('s-instagram').value.trim(),
+      logoDataUrl: logoDataUrl || existing.logoDataUrl || null
+    };
+    saveSettings(s);
+    applySettingsToUI();
+    document.getElementById('settingsModal').style.display = 'none';
+    alert('Settings saved!');
+  }
+
+  if (logoFile) {
+    const reader = new FileReader();
+    reader.onload = e => persist(e.target.result);
+    reader.readAsDataURL(logoFile);
+  } else {
+    persist(null);
+  }
+});
+
+// Load settings on startup
+applySettingsToUI();
 
 // ─── PWA ─────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {

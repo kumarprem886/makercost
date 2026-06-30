@@ -23,8 +23,31 @@
       </svg>
       <span>MakerCost</span>
     </div>
-    <button id="themeToggle" title="Toggle dark mode">🌙</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="settingsBtn" title="Settings">⚙️</button>
+      <button id="themeToggle" title="Toggle dark mode">🌙</button>
+    </div>
   </header>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settingsModal" style="display:none;">
+    <div class="modal-box" style="max-width:480px;">
+      <h3>⚙️ Business Settings</h3>
+      <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:16px;">Your details appear on PDF quotes and Instagram cards. Saved on your device only.</p>
+      <div class="field"><label>Business Name</label><input type="text" id="s-bizName" placeholder="e.g. ShroomLab 3D" /></div>
+      <div class="field"><label>Your Name</label><input type="text" id="s-ownerName" placeholder="e.g. Prem Kumar" /></div>
+      <div class="field"><label>Phone</label><input type="tel" id="s-phone" placeholder="e.g. 9597976015" /></div>
+      <div class="field"><label>City</label><input type="text" id="s-city" placeholder="e.g. Cuddalore" /></div>
+      <div class="field"><label>Email</label><input type="email" id="s-email" placeholder="e.g. you@gmail.com" /></div>
+      <div class="field"><label>Instagram Handle</label><input type="text" id="s-instagram" placeholder="e.g. shroomlab_3d" /></div>
+      <div class="field"><label>Logo (optional)</label><input type="file" id="s-logo" accept="image/*" /></div>
+      <div id="s-logoPreview" style="margin-bottom:12px;display:none;"><img id="s-logoImg" style="height:48px;border-radius:8px;" /></div>
+      <div class="actions" style="margin-top:8px;">
+        <button id="saveSettingsBtn" class="btn-primary">Save Settings</button>
+        <button id="closeSettingsBtn" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <main>
     <section class="hero">
@@ -256,7 +279,7 @@
           <div class="insta-divider"></div>
           <div class="insta-price-label">Selling Price</div>
           <div class="insta-price" id="ic-price">₹0</div>
-          <div class="insta-footer">Printed in India 🇮🇳 | @shroomlab_3d</div>
+          <div class="insta-footer" id="ic-footer">Printed in India 🇮🇳 | @shroomlab_3d</div>
         </div>
         <div class="actions" style="margin-top:16px;">
           <button id="downloadInstaBtn" class="btn-primary">⬇️ Download Image</button>
