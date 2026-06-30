@@ -282,6 +282,8 @@ document.getElementById('whatsappBtn').addEventListener('click', () => {
 });
 
 // ─── PDF ─────────────────────────────────────────────────────
+function pfmt(val) { return 'Rs. ' + val.toFixed(2); }
+
 document.getElementById('pdfBtn').addEventListener('click', () => {
   if (!window._lastResult) { alert('Calculate first!'); return; }
   const r = window._lastResult;
@@ -333,12 +335,12 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
 
   // Breakdown table
   const rows = [
-    ['Filament cost',      fmt(r.filamentCost)],
-    ['Electricity cost',   fmt(r.electricityCost)],
-    ['Machine wear',       fmt(r.machineWear)],
-    ['Labor cost',         fmt(r.laborCost)],
-    ['Failure buffer',     fmt(r.failureBuffer)],
-    ['Packaging + Shipping', fmt(r.logisticsCost)],
+    ['Filament cost',        pfmt(r.filamentCost)],
+    ['Electricity cost',     pfmt(r.electricityCost)],
+    ['Machine wear',         pfmt(r.machineWear)],
+    ['Labor cost',           pfmt(r.laborCost)],
+    ['Failure buffer',       pfmt(r.failureBuffer)],
+    ['Packaging + Shipping', pfmt(r.logisticsCost)],
   ];
 
   let y = 60;
@@ -358,9 +360,9 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   y += 8;
 
   const totals = [
-    ['Total Cost', fmt(r.totalCost), dark, 'bold'],
-    ['Profit margin', fmt(r.profitAmount), muted, 'normal'],
-    ['Platform fee', fmt(r.platformFeeAmount), muted, 'normal'],
+    ['Total Cost',    pfmt(r.totalCost),         dark,  'bold'],
+    ['Profit margin', pfmt(r.profitAmount),       muted, 'normal'],
+    ['Platform fee',  pfmt(r.platformFeeAmount),  muted, 'normal'],
   ];
   totals.forEach(([label, val, color, weight]) => {
     doc.setTextColor(...color);
@@ -380,7 +382,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   doc.text('Recommended Selling Price', 20, y + 9);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text(fmt(r.recPrice), 194, y + 14, { align: 'right' });
+  doc.text(pfmt(r.recPrice), 194, y + 14, { align: 'right' });
 
   if (r.bulkQty > 1) {
     y += 30;
@@ -389,7 +391,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
     doc.text(`Bulk Total (${r.bulkQty} units)`, 20, y + 10);
-    doc.text(fmt(r.bulkTotal), 194, y + 10, { align: 'right' });
+    doc.text(pfmt(r.bulkTotal), 194, y + 10, { align: 'right' });
   }
 
   // Footer
