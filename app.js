@@ -302,7 +302,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   const email     = cfg.email     || '';
   const insta     = cfg.instagram ? `@${cfg.instagram.replace('@','')}` : '';
   const line2 = [ownerName, city].filter(Boolean).join('  |  ');
-  const line3 = [phone, email, insta].filter(Boolean).join('  |  ');
+  const line3 = [phone, email, insta].filter(Boolean).join(' | ');
 
   doc.setFillColor(...purple);
   doc.rect(0, 0, 210, 40, 'F');
@@ -313,21 +313,23 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   if (line2) doc.text(line2, 14, 21);
-  if (line3) doc.text(line3, 14, 28);
+  if (line3) doc.text(line3.replace(/[^\x00-\x7F]/g, ''), 14, 28);
   doc.setTextColor(200, 200, 255);
   doc.text('3D Print Price Quote', 14, 35);
   doc.setTextColor(255, 255, 255);
   doc.text(new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }), 196, 35, { align: 'right' });
 
+  const safeStr = s => (s || '').replace(/[^\x00-\x7F]/g, '');
+
   // Print name
   doc.setTextColor(...dark);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text(r.printName, 14, 42);
+  doc.text(safeStr(r.printName) || 'Custom Print', 14, 42);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...muted);
-  doc.text(`${r.filamentType} | ${r.printTimeHours}h print time`, 14, 50);
+  doc.text(`${safeStr(r.filamentType) || 'Filament'} | ${r.printTimeHours}h print time`, 14, 50);
 
   // Breakdown table
   const rows = [
@@ -356,13 +358,13 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   y += 8;
 
   const totals = [
-    ['Total Cost', fmt(r.totalCost), dark],
-    ['Profit margin', fmt(r.profitAmount), muted],
-    ['Platform fee', fmt(r.platformFeeAmount), muted],
+    ['Total Cost', fmt(r.totalCost), dark, 'bold'],
+    ['Profit margin', fmt(r.profitAmount), muted, 'normal'],
+    ['Platform fee', fmt(r.platformFeeAmount), muted, 'normal'],
   ];
-  totals.forEach(([label, val, color]) => {
+  totals.forEach(([label, val, color, weight]) => {
     doc.setTextColor(...color);
-    doc.setFont('helvetica', i === 0 ? 'bold' : 'normal');
+    doc.setFont('helvetica', weight);
     doc.text(label, 16, y);
     doc.text(val, 194, y, { align: 'right' });
     y += 9;
@@ -395,7 +397,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   const footerParts = [bizName, city, phone, email].filter(Boolean);
-  doc.text(footerParts.join(' | '), 105, 285, { align: 'center' });
+  doc.text(safeStr(footerParts.join(' | ')), 105, 285, { align: 'center' });
 
   doc.save(`MakerCost_${r.printName.replace(/\s+/g, '_')}.pdf`);
 });
